@@ -46,8 +46,6 @@ param (
 
 BEGIN { 
 
-
-    $csvFile = "users.csv"
     $CsvFile = "folders.csv"
     $folderList = Import-Csv $CsvFile
     
