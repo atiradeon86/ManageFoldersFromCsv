@@ -47,7 +47,7 @@ param (
 BEGIN { 
 
 
-$csvFile = "users.csv"
+    $csvFile = "users.csv"
     $CsvFile = "folders.csv"
     $folderList = Import-Csv $CsvFile
     
@@ -57,29 +57,34 @@ $csvFile = "users.csv"
 
 PROCESS {
 
-
+    #Remove
     if ($cmd -eq "Remove") {
+
         $folderList | ForEach-Object {
-            $actual_folder = $_.Name
+          
+            $CurrentFolder = $_.Name
+            #InitialPath parameter check
             if ($InitialPath -ne "") {
-                $actual_folder = Join-Path -Path "$InitialPath" -ChildPath "$actual_folder"
-                Write-Host $actual_folder
+                #If InitialPath paramter -> Join
+                $CurrentFolder = Join-Path -Path "$InitialPath" -ChildPath "$CurrentFolder"
             } 
-            Remove-Item -Recurse -Path $actual_folder  
+            Remove-Item -Recurse -Path $CurrentFolder  
         }
         
-    }  elseif ($cmd -eq "Create") {
+    }  
+    #Create
+    elseif ($cmd -eq "Create") {
 
     $folderList | ForEach-Object {
-        $actual_folder = $_.Name
+        $CurrentFolder = $_.Name
+        #InitialPath parameter check
         if ($InitialPath -ne "") {
-            $actual_folder = Join-Path -Path "$InitialPath" -ChildPath "$actual_folder"
-            Write-Host $actual_folder
+            #If InitialPath paramter -> Join 
+            $CurrentFolder = Join-Path -Path "$InitialPath" -ChildPath "$CurrentFolder"
         } 
-        New-Item -Path $actual_folder  -ItemType Directory
+        New-Item -Path $CurrentFolder  -ItemType Directory
     }
-}    
-
+   }    
 
 }
 
