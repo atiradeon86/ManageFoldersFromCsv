@@ -14,7 +14,7 @@ Function ManageFoldersFromCsv {
 .PARAMETER InitialPath
   InitialPath -> Set Initial Path
 .NOTES
-  Version:        0.02 ALPHA
+  Version:        0.3 Beta
   Author:         Ati
   Creation Date:  2022.08.03
 .EXAMPLE
