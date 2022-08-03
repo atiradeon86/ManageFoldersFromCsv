@@ -1,23 +1,30 @@
 Function ManageFoldersFromCsv {
 
+#Import Example ---> Import-Module -force .\folders.ps1
+
 <#
+
 .SYNOPSIS
-  Manage Folder Structure based on CSV File
+  Manage Folder Structure -> based on custom CSV File
 .DESCRIPTION
-  Create or Delete Folder Structure based on custom CSV File
+  Create or Remove Folder Structure -> based on custom CSV File
 .PARAMETER cmd
   Create -> Create Folder Structure
-  Delete -> Delete Folder Structure
+  Remove -> Remove Folder Structure
 .PARAMETER InitialPath
-  InitialPath -> Set Initial Directory
+  InitialPath -> Set Initial Path
 .NOTES
-  Version:        0.01 ALPHA
+  Version:        0.02 ALPHA
   Author:         Ati
-  Creation Date:  <Date>
+  Creation Date:  2022.08.03
 .EXAMPLE
   ManageFoldersFromCsv -cmd Create
 .EXAMPLE
-  ManageFoldersFromCsv -cmd Delete
+  ManageFoldersFromCsv -cmd Create -InitialPath C:\Example
+.EXAMPLE
+  ManageFoldersFromCsv -cmd Remove
+.EXAMPLE
+  ManageFoldersFromCsv -cmd Remove -InitialPath C:\Example
 #>
 
 #-----------------------------------------------------------[Parameters]-----------------------------------------------------------
@@ -26,7 +33,7 @@ Function ManageFoldersFromCsv {
 param (
 
     [Parameter(Mandatory=$true,
-    HelpMessage="Create, Delete")] 
+    HelpMessage="Create, Remove")] 
     [string]$cmd,
 
     [Parameter(Mandatory=$false,
@@ -51,17 +58,25 @@ $csvFile = "users.csv"
 PROCESS {
 
 
-    if ($cmd -eq "Delete") {
+    if ($cmd -eq "Remove") {
         $folderList | ForEach-Object {
             $actual_folder = $_.Name
-            Remove-Item -Recurse -Path .\$actual_folder  
+            if ($InitialPath -ne "") {
+                $actual_folder = Join-Path -Path "$InitialPath" -ChildPath "$actual_folder"
+                Write-Host $actual_folder
+            } 
+            Remove-Item -Recurse -Path $actual_folder  
         }
         
     }  elseif ($cmd -eq "Create") {
 
     $folderList | ForEach-Object {
         $actual_folder = $_.Name
-        New-Item -Path .\$actual_folder  -ItemType Directory
+        if ($InitialPath -ne "") {
+            $actual_folder = Join-Path -Path "$InitialPath" -ChildPath "$actual_folder"
+            Write-Host $actual_folder
+        } 
+        New-Item -Path $actual_folder  -ItemType Directory
     }
 }    
 
